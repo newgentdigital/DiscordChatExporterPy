@@ -132,7 +132,7 @@ class Transcript:
             ("SERVER_NAME", f"[Brand] abc"),
             ("SERVER_AVATAR_URL", str(guild_icon), PARSE_MODE_NONE),
             ("CHANNEL_NAME", f"#ticket-XXXX"),
-            ("MESSAGE_COUNT", "[Category]",
+            ("MESSAGE_COUNT", "[Category]"),
             ("MESSAGES", message_html, PARSE_MODE_NONE),
             ("TIMEZONE", str(self.timezone_string)),
         ])
