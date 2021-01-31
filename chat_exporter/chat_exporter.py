@@ -33,7 +33,7 @@ def init_exporter(_bot):
 async def export(channel: discord.TextChannel, brand, ticketchannel, category, limit: int = None, set_timezone="Europe/London"):
     # noinspection PyBroadException
     try:
-        return (await Transcript.export(channel, limit, brand, ticketchannel, category,set_timezone)).html
+        return (await Transcript.export(channel=channel, limit=None, brand=brand, ticketchannel=ticketchannel, category=category, timezone_string=set_timezone)).html
     except Exception:
         traceback.print_exc()
         print(f"Please send a screenshot of the above error to https://www.github.com/mahtoid/DiscordChatExporterPy")
