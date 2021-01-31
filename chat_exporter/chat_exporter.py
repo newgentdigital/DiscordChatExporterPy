@@ -30,10 +30,10 @@ def init_exporter(_bot):
     pass_bot(bot)
 
 
-async def export(channel: discord.TextChannel, limit: int = None, set_timezone="Europe/London"):
+async def export(channel: discord.TextChannel, brand, ticketchannel, category, limit: int = None, set_timezone="Europe/London"):
     # noinspection PyBroadException
     try:
-        return (await Transcript.export(channel, limit, set_timezone)).html
+        return (await Transcript.export(channel, limit, brand, ticketchannel, category,set_timezone)).html
     except Exception:
         traceback.print_exc()
         print(f"Please send a screenshot of the above error to https://www.github.com/mahtoid/DiscordChatExporterPy")
@@ -95,11 +95,11 @@ class Transcript:
     html: Optional[str] = None
 
     @classmethod
-    async def export(cls, channel: discord.TextChannel, limit, timezone_string: str = "Europe/London") -> "Transcript":
+    async def export(cls, channel: discord.TextChannel, brand, ticketchannel, category, limit, timezone_string: str = "Europe/London") -> "Transcript":
         messages = await channel.history(limit=limit, oldest_first=True).flatten()
         transcript = await Transcript(channel=channel, guild=channel.guild, messages=messages,
                                       timezone_string=timezone(timezone_string))\
-            .build_transcript()
+            .build_transcript(brand, ticketchannel, category)
         return transcript
 
     @classmethod
@@ -111,7 +111,7 @@ class Transcript:
             .build_transcript()
         return transcript
 
-    async def build_transcript(self):
+    async def build_transcript(self, brand, ticketchannel, category):
         previous_message = None
         message_html = ""
 
@@ -119,20 +119,20 @@ class Transcript:
             message_html += await Message(m, previous_message, self.timezone_string).build_message()
             previous_message = m
 
-        await self.build_guild(message_html)
+        await self.build_guild(message_html, brand, ticketchannel, category)
 
         return self
 
-    async def build_guild(self, message_html):
+    async def build_guild(self, message_html, brand, ticketchannel, category):
         guild_icon = self.guild.icon_url
         if len(guild_icon) < 2:
             guild_icon = "https://discord.com/assets/dd4dbc0016779df1378e7812eabaa04d.png"
         guild_name = html.escape(self.guild.name)
         self.html = await fill_out(self.guild, total, [
-            ("SERVER_NAME", f"[Brand] abc"),
+            ("SERVER_NAME", f"[Brand] {brand}"),
             ("SERVER_AVATAR_URL", str(guild_icon), PARSE_MODE_NONE),
-            ("CHANNEL_NAME", f"#ticket-XXXX"),
-            ("MESSAGE_COUNT", "[Category]"),
+            ("CHANNEL_NAME", f"{ticketchannel}"),
+            ("MESSAGE_COUNT", f"[Category] {category}"),
             ("MESSAGES", message_html, PARSE_MODE_NONE),
             ("TIMEZONE", str(self.timezone_string)),
         ])
