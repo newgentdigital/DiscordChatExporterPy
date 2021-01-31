@@ -129,10 +129,10 @@ class Transcript:
             guild_icon = "https://discord.com/assets/dd4dbc0016779df1378e7812eabaa04d.png"
         guild_name = html.escape(self.guild.name)
         self.html = await fill_out(self.guild, total, [
-            ("SERVER_NAME", f"Guild: {guild_name}"),
+            ("SERVER_NAME", f"[Brand] abc"),
             ("SERVER_AVATAR_URL", str(guild_icon), PARSE_MODE_NONE),
-            ("CHANNEL_NAME", f"Channel: {self.channel.name}"),
-            ("MESSAGE_COUNT", str(len(self.messages))),
+            ("CHANNEL_NAME", f"#ticket-XXXX"),
+            ("MESSAGE_COUNT", "[Category]",
             ("MESSAGES", message_html, PARSE_MODE_NONE),
             ("TIMEZONE", str(self.timezone_string)),
         ])
